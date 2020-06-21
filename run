@@ -1,0 +1,7 @@
+source venv/bin/activate
+#flask run --host=0.0.0.0
+
+export FLASK_APP=src/server
+export FLASK_RUN_PORT=5010
+LD_PRELOAD=/usr/lib/arm-linux-gnueabihf/libatomic.so.1 flask run --host=0.0.0.0 
+#python3.7 src/server.py

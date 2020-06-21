@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="static/js/base.js"></script>
+    <script>
+        window.onload = () => {
+            setTimeout(() => {
+                saveCredentials('admin', 'admin').then(() => {
+                    window.location = window.location + '?username=admin&password=admin';
+                });
+            }, 2000);
+        }
+    </script>
+</head>
+<body>
+    <div>
+        <div>
+            LOGIN
+        </div>
+        <div>
+            <form>
+                <input type="text">
+                <input type="password">
+                <input type="button">
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

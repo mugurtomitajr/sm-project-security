@@ -1,0 +1,1 @@
+/usr/bin/vcgencmd get_mem arm

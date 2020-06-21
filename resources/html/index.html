@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript" src="static/js/base.js"></script>
+    <script>
+        let interval = null
+        window.onload = () => {
+            interval = setInterval(() => {
+                getMovementFactor();
+                getFeed();
+                getActive();
+                getAltered();
+                getInfo();
+            }, 1000);
+        }
+
+        const onActiveButtonClick = () => {
+            getRequest('toggle-active', getCredentials(), (response) => {
+
+            })
+        }
+
+        const getInfo = () => {
+            getRequest('get-info', getCredentials(), (response) => {
+                let info = document.getElementById('info');
+                if(info) {
+                    info.innerHTML = response
+                }
+            })
+        }
+
+        const getMovementFactor = () => {
+            getRequest('movement', getCredentials(), (response) => {
+                console.log('res', response);
+                response = JSON.parse(response);
+                let movementElement = document.getElementById('movement-factor')
+                let movementActiveElement = document.getElementById('movement-active');
+                if(movementElement && movementActiveElement) {
+                    movementElement.innerHTML = response['factor'];
+                    if(response['active'] === "1") {
+                        movementActiveElement.innerHTML = "MOTION DETECTED!!!"
+                    } else if(response['active'] === "0") {
+                        movementActiveElement.innerHTML = "No motion detected..."
+                    } else {
+                        movementActiveElement.innerHTML = "Connection problem..."
+                    }
+                }
+            }, (error) => {
+                console.error('Movement factor error', error);
+            });
+        }
+
+        const getActive = () => {
+            getRequest('get-active', getCredentials(), (response) => {
+                let button = document.getElementById('active-button');
+                let tag = document.getElementById('active-tag');
+                if(button) {
+                    if(response === '1') {
+                        button.innerHTML = 'DEZACTIVEAZA ALARMA';
+                        tag.innerHTML = 'ALARMA ACTIVA';
+                    } else if(response === '0') {
+                        button.innerHTML = 'ACTIVEAZA ALARMA';
+                        tag.innerHTML = 'ALARMA INACTIVA';
+                    } else {
+                        button.innerText = 'FARA CONEXIUNE...';
+                        tag.innerHTML = 'FARA CONEXIUNE...';
+                    }
+                }
+            })
+        }
+
+        const getFeed = () => {
+            getRequest('feed', getCredentials(), (response) => {
+                let feedElement = document.getElementById('feed');
+                if(feedElement) {
+                    feedElement.setAttribute('src',
+                        'data:image/png;base64,' + response
+                    );
+                }
+            }, (error) => {
+                console.error('Feed error', error);
+            });
+        }
+
+        const getAltered = () => {
+            getRequest('altered', getCredentials(), (response) => {
+                let alteredElement = document.getElementById('altered');
+                if(alteredElement) {
+                    alteredElement.setAttribute('src',
+                        'data:image/png;base64,' + response
+                    );
+                }
+            }, (error) => {
+                console.error('Altered error', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <div id="active-tag"></div>
+    <div id="info"></div>
+    <div id="movement-factor"></div>
+    <div id="movement-active"></div>
+    <div id="active-button" style="background-color: #eeeeee; border-radius: 4px; padding: 20px; cursor:pointer; margin: 20px;" onclick="onActiveButtonClick()">
+    </div>
+    <img id="feed"/>
+    <img id="altered"/>
+</body>
+</html>
